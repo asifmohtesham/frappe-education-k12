@@ -1,0 +1,30 @@
+{
+ "actions": [],
+ "autoname": "format:K12-TS-{#####}",
+ "creation": "2026-06-12 16:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["staff_name", "role", "phone", "employee", "license_number", "license_expiry", "active"],
+ "fields": [
+  {"fieldname": "staff_name", "fieldtype": "Data", "label": "Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "role", "fieldtype": "Select", "options": "Driver\nAttendant", "label": "Role", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "phone", "fieldtype": "Data", "label": "Phone"},
+  {"fieldname": "employee", "fieldtype": "Link", "options": "Employee", "label": "Employee"},
+  {"fieldname": "license_number", "fieldtype": "Data", "label": "License Number", "depends_on": "eval:doc.role=='Driver'"},
+  {"fieldname": "license_expiry", "fieldtype": "Date", "label": "License Expiry", "depends_on": "eval:doc.role=='Driver'"},
+  {"fieldname": "active", "fieldtype": "Check", "label": "Active", "default": "1"}
+ ],
+ "links": [],
+ "modified": "2026-06-12 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Transport Staff",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "share": 1},
+  {"role": "Academics User", "read": 1, "write": 1, "create": 1, "email": 1, "print": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
