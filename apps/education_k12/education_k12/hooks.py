@@ -164,6 +164,9 @@ doc_events = {
         "before_insert": "education_k12.k12_sis.admission.populate_admission_documents",
         "validate": "education_k12.k12_sis.admission.warn_pending_documents",
     },
+    "Fees": {
+        "before_validate": "education_k12.k12_fees.enrichment.enrich_fees",
+    },
 }
 
 # Scheduled Tasks
