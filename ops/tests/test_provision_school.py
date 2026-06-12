@@ -50,6 +50,18 @@ def test_all_commands_target_the_new_site_after_creation():
         assert cmd[cmd.index("--site") + 1] == "alnoor.localhost"
 
 
+def test_seeds_default_grades_after_app_install():
+    cmds = build_commands(make_config())
+    flat = [" ".join(c) for c in cmds]
+    seed_index = next(
+        i
+        for i, c in enumerate(flat)
+        if "education_k12.k12_sis.grades.create_default_grade_programs" in c
+    )
+    last_install_index = max(i for i, c in enumerate(flat) if "install-app" in c)
+    assert seed_index > last_install_index
+
+
 def test_provision_runs_all_commands_in_order_with_env():
     calls = []
 

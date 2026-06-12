@@ -6,7 +6,43 @@ Site-per-school tenancy; Frappe Desk for admins; Vue 3 + Frappe UI portal for
 teachers and parents.
 
 - **Design spec:** `docs/superpowers/specs/2026-06-12-k12-education-saas-design.md`
-- **Current plan:** `docs/superpowers/plans/2026-06-12-phase-0-foundation.md`
+- **Phase 0 plan:** `docs/superpowers/plans/2026-06-12-phase-0-foundation.md`
+- **Phase 1 plan:** `docs/superpowers/plans/2026-06-12-phase-1-core-sis.md`
+
+## Phase 1 (Core SIS)
+
+**Grade catalogue** — 14 K-12 Programs (KG 1, KG 2, Grade 1–Grade 12) are seeded
+automatically when `provision_school.py` creates a new site. To seed manually on
+an existing site:
+
+```bash
+bench --site <site> execute education_k12.k12_sis.grades.create_default_grade_programs
+```
+
+**Gulf student fields** — custom fields `national_id`, `national_id_expiry`,
+`visa_number`, `visa_expiry`, `emergency_contact_name`, `emergency_contact_phone`,
+and `medical_conditions` are added to Student and Student Applicant on install/migrate.
+
+**Sibling linking** — adding a sibling with `studying_in_same_institute = YES`
+automatically creates the reciprocal entry on the other student's record.
+
+**Homerooms** — a Student Group becomes a homeroom by setting `is_homeroom = 1`
+and assigning a `homeroom_teacher` (Link → Instructor). For a teacher to access
+the teacher portal, the Instructor record must have the `user` custom field set
+to their Frappe user. For a parent to access the parent portal, the Guardian
+record must have the `user` field set to their Frappe user.
+
+**Admission document checklist** — the `K12 Admission Document Type` master
+drives a per-applicant checklist. Mandatory types are seeded automatically on
+new Student Applicant records.
+
+**Student Promotion tool** — available in Frappe Desk under Education K12.
+Fill in From/To academic year and grade, click "Get Students", set each student's
+action (Promote / Retain / Exit), then Submit to create next-year enrollments.
+
+**Portal pages** — the Vue 3 SPA at `/portal`:
+- Teachers see their homerooms and student roster (requires `Instructor.user`).
+- Parents see their linked children and each child's profile (requires `Guardian.user`).
 
 ## Layout
 
@@ -123,9 +159,9 @@ npm test             # Vitest unit tests
 
 | Layer | Command | Where | Expected |
 |---|---|---|---|
-| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 1 test OK |
-| Ops | `python3.11 -m pytest ops/tests -v` | WSL, repo root | 6 passed |
-| Frontend | `npm test` | Windows, `apps/education_k12/frontend` | 2 passed |
+| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 25 tests OK |
+| Ops | `python3.11 -m pytest ops/tests -v` | WSL, repo root | 7 passed |
+| Frontend | `npm test` | Windows, `apps/education_k12/frontend` | 6 passed |
 
 Redis must be up before the backend test command.
 

@@ -39,6 +39,12 @@ def build_commands(cfg: SchoolConfig) -> list[list[str]]:
         ]
     ]
     cmds += [["bench", *site, "install-app", app] for app in APPS]
+    cmds.append(
+        [
+            "bench", *site, "execute",
+            "education_k12.k12_sis.grades.create_default_grade_programs",
+        ]
+    )
     cmds.append(["bench", *site, "set-config", "lang", cfg.default_language])
     set_value_kwargs = repr(
         {
