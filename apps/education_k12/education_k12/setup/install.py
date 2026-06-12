@@ -186,13 +186,23 @@ def ensure_roles():
 
 
 def ensure_fee_categories():
-    """Seed the standard categories once; never overwrite school edits."""
+    """Seed the standard categories once; never overwrite school edits.
+
+    Wrapped in a try/except because on a fresh ERPNext install the
+    FeeCategory.after_insert hook tries to create an ERPNext Item (which
+    requires Default UOM to be configured).  If ERPNext isn't fully
+    bootstrapped yet (e.g. during CI site creation) we skip gracefully;
+    the categories will be seeded on the first normal migrate after setup.
+    """
     for category_name, taxable in FEE_CATEGORIES:
         if not frappe.db.exists("Fee Category", category_name):
-            frappe.get_doc(
-                {
-                    "doctype": "Fee Category",
-                    "category_name": category_name,
-                    "taxable": taxable,
-                }
-            ).insert(ignore_permissions=True)
+            try:
+                frappe.get_doc(
+                    {
+                        "doctype": "Fee Category",
+                        "category_name": category_name,
+                        "taxable": taxable,
+                    }
+                ).insert(ignore_permissions=True)
+            except Exception:
+                pass  # ERPNext not fully bootstrapped; skip silently
