@@ -21,7 +21,8 @@ bench --site <site> execute education_k12.k12_sis.grades.create_default_grade_pr
 
 **Gulf student fields** — custom fields `national_id`, `national_id_expiry`,
 `visa_number`, `visa_expiry`, `emergency_contact_name`, `emergency_contact_phone`,
-and `medical_conditions` are added to Student and Student Applicant on install/migrate.
+and `medical_conditions` are added to Student on install/migrate. Student Applicant
+receives only `national_id` and `national_id_expiry`.
 
 **Sibling linking** — adding a sibling with `studying_in_same_institute = YES`
 automatically creates the reciprocal entry on the other student's record.
