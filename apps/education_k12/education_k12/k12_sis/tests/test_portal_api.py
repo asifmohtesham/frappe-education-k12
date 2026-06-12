@@ -138,3 +138,35 @@ class TestPortalAPI(FrappeTestCase):
         frappe.set_user("Guest")
         with self.assertRaises(frappe.PermissionError):
             portal.get_portal_context()
+
+    def test_cross_role_calls_are_rejected(self):
+        g_user = ensure_user("only.parent@test.k12.local", "Only Parent", roles=("Guardian",))
+        ensure_guardian("Only Parent", g_user)
+        t_user = ensure_user("only.teacher@test.k12.local", "Only Teacher")
+        ensure_teacher("Only Teacher", t_user)
+
+        frappe.set_user(g_user)
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_homerooms()
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_homeroom_roster("HR Own 1")
+
+        frappe.set_user(t_user)
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_children()
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_child_profile("STU-0001")
+
+    def test_guest_is_rejected_on_every_endpoint(self):
+        frappe.set_user("Guest")
+        for call in (
+            portal.get_portal_context,
+            portal.get_children,
+            portal.get_homerooms,
+        ):
+            with self.assertRaises(frappe.PermissionError):
+                call()
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_child_profile("STU-0001")
+        with self.assertRaises(frappe.PermissionError):
+            portal.get_homeroom_roster("HR Own 1")
