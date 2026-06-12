@@ -16,5 +16,18 @@
     "noHomerooms": "لا توجد فصول مسندة إليك بعد.",
     "rollNo": "الرقم",
     "studentName": "الطالب"
+  },
+  "parent": {
+    "myChildren": "أبنائي",
+    "noChildren": "لا يوجد طلاب مرتبطون بحسابك بعد.",
+    "grade": "الصف",
+    "academicYear": "العام الدراسي",
+    "homeroom": "الفصل",
+    "dateOfBirth": "تاريخ الميلاد",
+    "nationality": "الجنسية",
+    "bloodGroup": "فصيلة الدم",
+    "medical": "الحالات الصحية",
+    "emergencyContact": "جهة اتصال الطوارئ",
+    "emergencyPhone": "هاتف الطوارئ"
   }
 }
