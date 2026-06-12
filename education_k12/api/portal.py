@@ -104,7 +104,39 @@ def get_child_profile(student):
         {"student": student, "parenttype": "Student Group", "active": 1},
         "parent",
     )
+    profile["transport"] = _transport_for(student)
     return profile
+
+
+def _transport_for(student):
+    assignment = frappe.db.get_value(
+        "K12 Transport Assignment",
+        {"student": student, "active": 1},
+        ["route", "stop_name", "direction"],
+        as_dict=True,
+    )
+    if not assignment:
+        return None
+    stop = (
+        frappe.db.get_value(
+            "K12 Route Stop",
+            {
+                "parent": assignment.route,
+                "parenttype": "K12 Transport Route",
+                "stop_name": assignment.stop_name,
+            },
+            ["pickup_time", "drop_time"],
+            as_dict=True,
+        )
+        or frappe._dict()
+    )
+    return {
+        "route": assignment.route,
+        "stop": assignment.stop_name,
+        "direction": assignment.direction,
+        "pickup_time": str(stop.pickup_time) if stop.get("pickup_time") else None,
+        "drop_time": str(stop.drop_time) if stop.get("drop_time") else None,
+    }
 
 
 @frappe.whitelist()

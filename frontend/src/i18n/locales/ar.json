@@ -28,6 +28,9 @@
     "bloodGroup": "فصيلة الدم",
     "medical": "الحالات الصحية",
     "emergencyContact": "جهة اتصال الطوارئ",
-    "emergencyPhone": "هاتف الطوارئ"
+    "emergencyPhone": "هاتف الطوارئ",
+    "busRoute": "خط الحافلة",
+    "busStop": "موقف الحافلة",
+    "busPickup": "وقت الصعود"
   }
 }

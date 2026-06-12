@@ -33,5 +33,8 @@ const profileFields = [
   { key: 'medical', label: 'parent.medical', value: () => profile.data?.medical_conditions },
   { key: 'emName', label: 'parent.emergencyContact', value: () => profile.data?.emergency_contact_name },
   { key: 'emPhone', label: 'parent.emergencyPhone', value: () => profile.data?.emergency_contact_phone },
+  { key: 'busRoute', label: 'parent.busRoute', value: () => profile.data?.transport?.route },
+  { key: 'busStop', label: 'parent.busStop', value: () => profile.data?.transport?.stop },
+  { key: 'busPickup', label: 'parent.busPickup', value: () => profile.data?.transport?.pickup_time },
 ]
 </script>

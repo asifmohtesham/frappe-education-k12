@@ -28,6 +28,9 @@
     "bloodGroup": "Blood Group",
     "medical": "Medical Conditions",
     "emergencyContact": "Emergency Contact",
-    "emergencyPhone": "Emergency Phone"
+    "emergencyPhone": "Emergency Phone",
+    "busRoute": "Bus Route",
+    "busStop": "Bus Stop",
+    "busPickup": "Pickup Time"
   }
 }
