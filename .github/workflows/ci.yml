@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=2s --health-retries=15
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install bench
+        run: |
+          npm install -g yarn
+          pip install frappe-bench
+
+      - name: Init bench
+        run: |
+          bench init --skip-assets --skip-redis-config-generation \
+            --frappe-branch version-15 /home/runner/frappe-bench
+          cd /home/runner/frappe-bench
+          bench set-config -g redis_cache redis://127.0.0.1:6379
+          bench set-config -g redis_queue redis://127.0.0.1:6379
+          bench set-config -g redis_socketio redis://127.0.0.1:6379
+
+      - name: Get apps
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench get-app erpnext --branch version-15 --skip-assets
+          bench get-app education --branch version-15.2 --skip-assets
+          bench get-app education_k12 $GITHUB_WORKSPACE/apps/education_k12 --skip-assets
+
+      - name: Create test site and install apps
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench new-site test_site --db-host 127.0.0.1 \
+            --mariadb-user-host-login-scope='%' \
+            --db-root-password root --admin-password admin
+          bench --site test_site install-app erpnext
+          bench --site test_site install-app education
+          bench --site test_site install-app education_k12
+
+      - name: Run education_k12 tests
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench --site test_site set-config allow_tests true
+          bench --site test_site run-tests --app education_k12
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Run frontend tests (skip if not scaffolded)
+        working-directory: apps/education_k12
+        run: |
+          if [ -f frontend/package.json ]; then
+            cd frontend && yarn install --frozen-lockfile && yarn test
+          else
+            echo "frontend not scaffolded yet, skipping"
+          fi
