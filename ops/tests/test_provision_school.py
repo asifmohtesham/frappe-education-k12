@@ -28,8 +28,19 @@ def test_installs_all_apps_in_order():
 def test_sets_school_display_name_via_k12_settings():
     cmds = build_commands(make_config())
     set_value = cmds[-1]
-    assert "set-value" in set_value or "execute" in set_value
+    assert set_value[set_value.index("execute") + 1] == "frappe.client.set_value"
+    assert "--kwargs" in set_value
     assert any("Al Noor International School" in part for part in set_value)
+
+
+def test_school_name_with_apostrophe_is_safely_quoted():
+    import ast
+
+    cmds = build_commands(make_config(school_name="St. Mary's School"))
+    kwargs_str = cmds[-1][cmds[-1].index("--kwargs") + 1]
+    parsed = ast.literal_eval(kwargs_str)
+    assert parsed["value"] == "St. Mary's School"
+    assert parsed["doctype"] == "K12 Settings"
 
 
 def test_all_commands_target_the_new_site_after_creation():
@@ -37,3 +48,19 @@ def test_all_commands_target_the_new_site_after_creation():
     for cmd in cmds[1:]:
         assert "--site" in cmd
         assert cmd[cmd.index("--site") + 1] == "alnoor.localhost"
+
+
+def test_provision_runs_all_commands_in_order_with_env():
+    calls = []
+
+    def fake_runner(cmd, check, env):
+        calls.append((cmd, check, env))
+
+    from ops.provision_school import provision
+
+    cfg = make_config()
+    provision(cfg, runner=fake_runner)
+
+    assert [c[0] for c in calls] == build_commands(cfg)
+    assert all(check is True for _, check, _ in calls)
+    assert all(env is not None for _, _, env in calls)

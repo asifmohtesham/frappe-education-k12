@@ -40,14 +40,18 @@ def build_commands(cfg: SchoolConfig) -> list[list[str]]:
     ]
     cmds += [["bench", *site, "install-app", app] for app in APPS]
     cmds.append(["bench", *site, "set-config", "lang", cfg.default_language])
-    kwargs = (
-        "{'doctype': 'K12 Settings', 'name': 'K12 Settings',"
-        " 'fieldname': 'school_display_name', 'value': '" + cfg.school_name + "'}"
+    set_value_kwargs = repr(
+        {
+            "doctype": "K12 Settings",
+            "name": "K12 Settings",
+            "fieldname": "school_display_name",
+            "value": cfg.school_name,
+        }
     )
     cmds.append(
         [
             "bench", *site, "execute", "frappe.client.set_value",
-            "--kwargs", kwargs,
+            "--kwargs", set_value_kwargs,
         ]
     )
     return cmds
@@ -57,7 +61,7 @@ def _bench_env() -> dict:
     """Return an environment dict that ensures ~/.local/bin is on PATH."""
     env = os.environ.copy()
     local_bin = os.path.expanduser("~/.local/bin")
-    if local_bin not in env.get("PATH", ""):
+    if local_bin not in env.get("PATH", "").split(os.pathsep):
         env["PATH"] = local_bin + os.pathsep + env.get("PATH", "")
     return env
 
