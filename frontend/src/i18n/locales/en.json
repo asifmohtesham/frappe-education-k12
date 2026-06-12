@@ -7,6 +7,14 @@
   },
   "home": {
     "welcome": "Welcome",
-    "logout": "Log out"
+    "logout": "Log out",
+    "noAccess": "Your account has no portal access yet. Contact the school office."
+  },
+  "common": { "loading": "Loading…" },
+  "teacher": {
+    "myHomerooms": "My Homerooms",
+    "noHomerooms": "No homerooms assigned to you yet.",
+    "rollNo": "Roll #",
+    "studentName": "Student"
   }
 }
