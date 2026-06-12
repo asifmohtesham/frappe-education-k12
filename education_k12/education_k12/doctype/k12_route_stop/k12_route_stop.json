@@ -1,0 +1,24 @@
+{
+ "actions": [],
+ "creation": "2026-06-12 16:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["stop_name", "sequence", "pickup_time", "drop_time"],
+ "fields": [
+  {"fieldname": "stop_name", "fieldtype": "Data", "label": "Stop", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "sequence", "fieldtype": "Int", "label": "Sequence", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "pickup_time", "fieldtype": "Time", "label": "Pickup Time", "in_list_view": 1},
+  {"fieldname": "drop_time", "fieldtype": "Time", "label": "Drop Time", "in_list_view": 1}
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-12 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Route Stop",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
