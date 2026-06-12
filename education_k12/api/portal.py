@@ -109,12 +109,14 @@ def get_child_profile(student):
 
 
 def _transport_for(student):
-    assignment = frappe.db.get_value(
+    rows = frappe.get_all(
         "K12 Transport Assignment",
-        {"student": student, "active": 1},
-        ["route", "stop_name", "direction"],
-        as_dict=True,
+        filters={"student": student, "active": 1},
+        fields=["route", "stop_name", "direction"],
+        order_by="creation desc",
+        limit=1,
     )
+    assignment = rows[0] if rows else None
     if not assignment:
         return None
     stop = (
