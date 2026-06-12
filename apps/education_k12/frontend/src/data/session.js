@@ -2,8 +2,10 @@ import { computed, reactive } from 'vue'
 import { createResource } from 'frappe-ui'
 
 export function sessionUser() {
-  const cookies = new URLSearchParams(document.cookie.split('; ').join('&'))
-  let user = cookies.get('user_id')
+  const cookie = document.cookie
+    .split('; ')
+    .find((c) => c.startsWith('user_id='))
+  let user = cookie ? decodeURIComponent(cookie.split('=').slice(1).join('=')) : null
   if (user === 'Guest') user = null
   return user
 }
