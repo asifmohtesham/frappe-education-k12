@@ -132,9 +132,11 @@ Redis must be up before the backend test command.
 ### Provisioning a school site
 
 ```bash
-# WSL, from repo root
-python3 ops/provision_school.py <school-subdomain> "<School Display Name>"
-# e.g.: python3 ops/provision_school.py greenfield "Greenfield Academy"
+# from the bench directory in WSL, with redis running
+python3.11 /mnt/c/Users/<you>/source/repos/frappe-education-k12/ops/provision_school.py \
+  --site greenfield.localhost --school-name "Greenfield Academy" \
+  --admin-password <admin-pw> --db-root-password <db-root-pw>
+# optional: --default-language ar
 ```
 
 ### CI
