@@ -1,0 +1,23 @@
+{
+ "actions": [],
+ "creation": "2026-06-12 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["document_type", "status", "attachment"],
+ "fields": [
+  {"fieldname": "document_type", "fieldtype": "Link", "options": "K12 Admission Document Type", "label": "Document", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "options": "Pending\nReceived\nVerified", "default": "Pending", "label": "Status", "in_list_view": 1},
+  {"fieldname": "attachment", "fieldtype": "Attach", "label": "Attachment", "in_list_view": 1}
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-12 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Admission Document",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

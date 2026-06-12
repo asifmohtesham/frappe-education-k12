@@ -73,6 +73,19 @@ CUSTOM_FIELDS = {
             label="National ID Expiry",
             insert_after="national_id",
         ),
+        dict(
+            fieldname="k12_documents_section",
+            fieldtype="Section Break",
+            label="Admission Documents",
+            insert_after="application_status",
+        ),
+        dict(
+            fieldname="admission_documents",
+            fieldtype="Table",
+            options="K12 Admission Document",
+            label="Admission Documents",
+            insert_after="k12_documents_section",
+        ),
     ],
     "Student Group": [
         dict(
