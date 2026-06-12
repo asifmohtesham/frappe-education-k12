@@ -4,6 +4,17 @@ from frappe.tests.utils import FrappeTestCase
 from education_k12.k12_sis.grades import create_default_grade_programs
 from education_k12.k12_sis.tests.utils import ensure_academic_year, ensure_student
 
+# Prevent Frappe's test runner from loading upstream fixtures for linked
+# doctypes (Program Enrollment → Company → Warehouse), which fail in CI
+# because ERPNext "Warehouse Type: Transit" is not set up.
+test_ignore = [
+    "Program Enrollment",
+    "Program",
+    "Academic Year",
+    "Student",
+    "Company",
+]
+
 
 def enroll(student, program, year):
     enrollment = frappe.get_doc(
