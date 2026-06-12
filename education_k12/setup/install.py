@@ -4,6 +4,76 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 K12_ROLES = ("Guardian",)
 
 CUSTOM_FIELDS = {
+    "Student": [
+        dict(
+            fieldname="k12_identity_section",
+            fieldtype="Section Break",
+            label="Identity & Visa",
+            insert_after="nationality",
+        ),
+        dict(
+            fieldname="national_id",
+            fieldtype="Data",
+            label="National ID (Emirates ID / Iqama)",
+            insert_after="k12_identity_section",
+        ),
+        dict(
+            fieldname="national_id_expiry",
+            fieldtype="Date",
+            label="National ID Expiry",
+            insert_after="national_id",
+        ),
+        dict(
+            fieldname="visa_number",
+            fieldtype="Data",
+            label="Visa Number",
+            insert_after="national_id_expiry",
+        ),
+        dict(
+            fieldname="visa_expiry",
+            fieldtype="Date",
+            label="Visa Expiry",
+            insert_after="visa_number",
+        ),
+        dict(
+            fieldname="k12_welfare_section",
+            fieldtype="Section Break",
+            label="Emergency & Medical",
+            insert_after="visa_expiry",
+        ),
+        dict(
+            fieldname="emergency_contact_name",
+            fieldtype="Data",
+            label="Emergency Contact Name",
+            insert_after="k12_welfare_section",
+        ),
+        dict(
+            fieldname="emergency_contact_phone",
+            fieldtype="Data",
+            label="Emergency Contact Phone",
+            insert_after="emergency_contact_name",
+        ),
+        dict(
+            fieldname="medical_conditions",
+            fieldtype="Small Text",
+            label="Medical Conditions / Allergies",
+            insert_after="emergency_contact_phone",
+        ),
+    ],
+    "Student Applicant": [
+        dict(
+            fieldname="national_id",
+            fieldtype="Data",
+            label="National ID (Emirates ID / Iqama)",
+            insert_after="nationality",
+        ),
+        dict(
+            fieldname="national_id_expiry",
+            fieldtype="Date",
+            label="National ID Expiry",
+            insert_after="national_id",
+        ),
+    ],
     "Program": [
         dict(
             fieldname="k12_grade_section",
