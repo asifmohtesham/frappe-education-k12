@@ -74,6 +74,32 @@ CUSTOM_FIELDS = {
             insert_after="national_id",
         ),
     ],
+    "Student Group": [
+        dict(
+            fieldname="is_homeroom",
+            fieldtype="Check",
+            label="Is Homeroom",
+            insert_after="group_based_on",
+        ),
+        dict(
+            fieldname="homeroom_teacher",
+            fieldtype="Link",
+            options="Instructor",
+            label="Homeroom Teacher",
+            insert_after="is_homeroom",
+            depends_on="is_homeroom",
+        ),
+    ],
+    "Instructor": [
+        dict(
+            fieldname="user",
+            fieldtype="Link",
+            options="User",
+            label="User",
+            insert_after="employee",
+            unique=1,
+        ),
+    ],
     "Program": [
         dict(
             fieldname="k12_grade_section",

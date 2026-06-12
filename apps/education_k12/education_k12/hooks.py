@@ -157,6 +157,9 @@ doc_events = {
         "validate": "education_k12.k12_sis.siblings.validate_siblings",
         "on_update": "education_k12.k12_sis.siblings.sync_reciprocal_siblings",
     },
+    "Student Group": {
+        "validate": "education_k12.k12_sis.homeroom.validate_homeroom",
+    },
 }
 
 # Scheduled Tasks
