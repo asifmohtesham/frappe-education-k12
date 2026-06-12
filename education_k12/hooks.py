@@ -89,6 +89,9 @@ app_license = "mit"
 # before_install = "education_k12.install.before_install"
 # after_install = "education_k12.install.after_install"
 
+after_install = ["education_k12.setup.install.ensure_customizations"]
+after_migrate = ["education_k12.setup.install.ensure_customizations"]
+
 # Uninstallation
 # ------------
 
