@@ -142,13 +142,39 @@ CUSTOM_FIELDS = {
             depends_on="is_k12_grade",
         ),
     ],
+    "Fee Category": [
+        dict(
+            fieldname="taxable",
+            fieldtype="Check",
+            label="Taxable (VAT applies)",
+            insert_after="description",
+        ),
+    ],
+    "Fees": [
+        dict(
+            fieldname="last_reminder_on",
+            fieldtype="Date",
+            label="Last Reminder On",
+            read_only=1,
+            insert_after="due_date",
+        ),
+    ],
 }
+
+
+FEE_CATEGORIES = (
+    # (category_name, taxable)
+    ("Tuition", 0),   # UAE education exemption by default; school-configurable
+    ("Transport", 1),
+    ("VAT", 0),       # reserved category used for the computed VAT row
+)
 
 
 def ensure_customizations():
     """Idempotent: runs on install and on every migrate."""
     create_custom_fields(CUSTOM_FIELDS, ignore_validate=True)
     ensure_roles()
+    ensure_fee_categories()
 
 
 def ensure_roles():
@@ -156,4 +182,17 @@ def ensure_roles():
         if not frappe.db.exists("Role", role):
             frappe.get_doc(
                 {"doctype": "Role", "role_name": role, "desk_access": 0}
+            ).insert(ignore_permissions=True)
+
+
+def ensure_fee_categories():
+    """Seed the standard categories once; never overwrite school edits."""
+    for category_name, taxable in FEE_CATEGORIES:
+        if not frappe.db.exists("Fee Category", category_name):
+            frappe.get_doc(
+                {
+                    "doctype": "Fee Category",
+                    "category_name": category_name,
+                    "taxable": taxable,
+                }
             ).insert(ignore_permissions=True)
