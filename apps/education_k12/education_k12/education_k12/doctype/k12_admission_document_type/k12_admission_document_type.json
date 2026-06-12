@@ -1,0 +1,25 @@
+{
+ "actions": [],
+ "autoname": "field:document_name",
+ "creation": "2026-06-12 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["document_name", "mandatory"],
+ "fields": [
+  {"fieldname": "document_name", "fieldtype": "Data", "label": "Document Name", "reqd": 1, "unique": 1},
+  {"fieldname": "mandatory", "fieldtype": "Check", "label": "Mandatory", "default": "1"}
+ ],
+ "links": [],
+ "modified": "2026-06-12 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Admission Document Type",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "share": 1},
+  {"role": "Academics User", "read": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -160,6 +160,10 @@ doc_events = {
     "Student Group": {
         "validate": "education_k12.k12_sis.homeroom.validate_homeroom",
     },
+    "Student Applicant": {
+        "before_insert": "education_k12.k12_sis.admission.populate_admission_documents",
+        "validate": "education_k12.k12_sis.admission.warn_pending_documents",
+    },
 }
 
 # Scheduled Tasks
