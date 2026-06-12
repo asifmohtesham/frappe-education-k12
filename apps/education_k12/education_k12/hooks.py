@@ -152,6 +152,13 @@ after_migrate = ["education_k12.setup.install.ensure_customizations"]
 # 	}
 # }
 
+doc_events = {
+    "Student": {
+        "validate": "education_k12.k12_sis.siblings.validate_siblings",
+        "on_update": "education_k12.k12_sis.siblings.sync_reciprocal_siblings",
+    },
+}
+
 # Scheduled Tasks
 # ---------------
 
