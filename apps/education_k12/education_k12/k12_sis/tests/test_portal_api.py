@@ -170,3 +170,35 @@ class TestPortalAPI(FrappeTestCase):
             portal.get_child_profile("STU-0001")
         with self.assertRaises(frappe.PermissionError):
             portal.get_homeroom_roster("HR Own 1")
+
+    def test_child_profile_includes_transport(self):
+        from education_k12.k12_transport.tests.utils import ensure_route, ensure_vehicle
+
+        child = ensure_student("Portal Bus Child")
+        user = ensure_user("parent.bus@test.k12.local", "Parent Bus", roles=("Guardian",))
+        link_guardian_to_student(child, ensure_guardian("Parent Bus", user))
+        route = ensure_route(
+            "Route Portal", ensure_vehicle("DXB P 40001", capacity=10)
+        )
+        frappe.get_doc(
+            {
+                "doctype": "K12 Transport Assignment",
+                "student": child,
+                "academic_year": ensure_academic_year(),
+                "route": route,
+                "stop_name": "Main Gate",
+            }
+        ).insert(ignore_permissions=True)
+
+        frappe.set_user(user)
+        profile = portal.get_child_profile(child)
+        self.assertEqual(profile["transport"]["route"], route)
+        self.assertEqual(profile["transport"]["stop"], "Main Gate")
+
+        frappe.set_user("Administrator")
+        child_no_bus = ensure_student("Portal Walk Child")
+        link_guardian_to_student(
+            child_no_bus, frappe.db.get_value("Guardian", {"user": user})
+        )
+        frappe.set_user(user)
+        self.assertIsNone(portal.get_child_profile(child_no_bus)["transport"])
