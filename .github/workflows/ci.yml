@@ -96,7 +96,7 @@ jobs:
         working-directory: apps/education_k12
         run: |
           if [ -f frontend/package.json ]; then
-            cd frontend && yarn install --frozen-lockfile && yarn test
+            cd frontend && npm ci && npm test
           else
             echo "frontend not scaffolded yet, skipping"
           fi

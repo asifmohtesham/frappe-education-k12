@@ -1,4 +1,8 @@
 app_name = "education_k12"
+
+website_route_rules = [
+    {"from_route": "/portal/<path:app_path>", "to_route": "portal"},
+]
 app_title = "Education K12"
 app_publisher = "Asif Mohtesham"
 app_description = "K-12 extensions for Frappe Education"
