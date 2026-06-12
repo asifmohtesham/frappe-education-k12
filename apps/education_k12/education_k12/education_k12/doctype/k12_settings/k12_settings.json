@@ -3,7 +3,18 @@
  "creation": "2026-06-12 10:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
- "field_order": ["school_display_name", "default_language"],
+ "field_order": [
+  "school_display_name",
+  "default_language",
+  "billing_section",
+  "vat_rate",
+  "payment_gateway",
+  "sibling_discount_slabs",
+  "reminders_section",
+  "enable_fee_reminders",
+  "reminder_days_after_due",
+  "reminder_repeat_days"
+ ],
  "fields": [
   {
    "fieldname": "school_display_name",
@@ -16,11 +27,57 @@
    "fieldtype": "Select",
    "label": "Default Language",
    "options": "en\nar"
+  },
+  {
+   "fieldname": "billing_section",
+   "fieldtype": "Section Break",
+   "label": "Billing"
+  },
+  {
+   "default": "5",
+   "fieldname": "vat_rate",
+   "fieldtype": "Percent",
+   "label": "VAT Rate (%)"
+  },
+  {
+   "default": "Mock",
+   "fieldname": "payment_gateway",
+   "fieldtype": "Select",
+   "label": "Payment Gateway",
+   "options": "Mock\nStripe"
+  },
+  {
+   "fieldname": "sibling_discount_slabs",
+   "fieldtype": "Table",
+   "label": "Sibling Discount Slabs",
+   "options": "K12 Sibling Discount Slab"
+  },
+  {
+   "fieldname": "reminders_section",
+   "fieldtype": "Section Break",
+   "label": "Fee Reminders"
+  },
+  {
+   "fieldname": "enable_fee_reminders",
+   "fieldtype": "Check",
+   "label": "Enable Overdue Fee Reminder Emails"
+  },
+  {
+   "default": "3",
+   "fieldname": "reminder_days_after_due",
+   "fieldtype": "Int",
+   "label": "Remind After (days past due)"
+  },
+  {
+   "default": "7",
+   "fieldname": "reminder_repeat_days",
+   "fieldtype": "Int",
+   "label": "Repeat Every (days)"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-06-12 10:00:00.000000",
+ "modified": "2026-06-13 09:00:00.000000",
  "modified_by": "Administrator",
  "module": "Education K12",
  "name": "K12 Settings",
