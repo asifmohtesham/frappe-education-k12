@@ -142,6 +142,21 @@ CUSTOM_FIELDS = {
             depends_on="is_k12_grade",
         ),
     ],
+    "Fee Structure": [
+        # Fees.income_account has fetch_from="fee_structure.income_account" in
+        # education v15.2 but Fee Structure itself does not carry this column,
+        # causing a DB error during Frappe link-validation.  Add it here so the
+        # fetch path resolves cleanly; set_missing_accounts_and_fields on Fees
+        # then fills the actual value from the company default.
+        dict(
+            fieldname="income_account",
+            fieldtype="Link",
+            options="Account",
+            label="Income Account",
+            insert_after="receivable_account",
+            print_hide=1,
+        ),
+    ],
     "Fee Category": [
         dict(
             fieldname="taxable",
