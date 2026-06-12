@@ -24,6 +24,6 @@ export default defineConfig({
   build: {
     outDir: '../education_k12/public/frontend',
     emptyOutDir: true,
-    target: 'es2015',
+    target: 'es2020',
   },
 })
