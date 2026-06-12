@@ -1,0 +1,12 @@
+{
+  "login": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in"
+  },
+  "home": {
+    "welcome": "Welcome",
+    "logout": "Log out"
+  }
+}

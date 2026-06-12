@@ -1,0 +1,27 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base=/assets/education_k12/frontend/ && npm run copy-html",
+    "copy-html": "node -e \"const fs=require('fs');fs.mkdirSync('../education_k12/www',{recursive:true});fs.copyFileSync('../education_k12/public/frontend/index.html','../education_k12/www/portal.html')\"",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "frappe-ui": "^0.1.278",
+    "vue": "^3.5.34",
+    "vue-i18n": "^11.4.2",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "vite": "^5.4.19",
+    "vitest": "^4.1.8"
+  }
+}
