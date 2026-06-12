@@ -14,6 +14,16 @@ const routes = [
     name: 'HomeroomRoster',
     component: () => import('./pages/teacher/HomeroomRoster.vue'),
   },
+  {
+    path: '/children',
+    name: 'Children',
+    component: () => import('./pages/parent/Children.vue'),
+  },
+  {
+    path: '/children/:studentId',
+    name: 'ChildProfile',
+    component: () => import('./pages/parent/ChildProfile.vue'),
+  },
 ]
 
 const router = createRouter({

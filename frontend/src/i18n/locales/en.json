@@ -16,5 +16,18 @@
     "noHomerooms": "No homerooms assigned to you yet.",
     "rollNo": "Roll #",
     "studentName": "Student"
+  },
+  "parent": {
+    "myChildren": "My Children",
+    "noChildren": "No students linked to your account yet.",
+    "grade": "Grade",
+    "academicYear": "Academic Year",
+    "homeroom": "Homeroom",
+    "dateOfBirth": "Date of Birth",
+    "nationality": "Nationality",
+    "bloodGroup": "Blood Group",
+    "medical": "Medical Conditions",
+    "emergencyContact": "Emergency Contact",
+    "emergencyPhone": "Emergency Phone"
   }
 }
