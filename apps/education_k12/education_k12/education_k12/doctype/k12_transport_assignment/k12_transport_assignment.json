@@ -1,0 +1,30 @@
+{
+ "actions": [],
+ "autoname": "format:K12-TA-{#####}",
+ "creation": "2026-06-12 16:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["student", "student_name", "academic_year", "route", "stop_name", "direction", "active"],
+ "fields": [
+  {"fieldname": "student", "fieldtype": "Link", "options": "Student", "label": "Student", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "student_name", "fieldtype": "Data", "label": "Student Name", "fetch_from": "student.student_name", "in_list_view": 1},
+  {"fieldname": "academic_year", "fieldtype": "Link", "options": "Academic Year", "label": "Academic Year", "reqd": 1},
+  {"fieldname": "route", "fieldtype": "Link", "options": "K12 Transport Route", "label": "Route", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "stop_name", "fieldtype": "Data", "label": "Stop", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "direction", "fieldtype": "Select", "options": "Both\nPickup Only\nDrop Only", "default": "Both", "label": "Direction"},
+  {"fieldname": "active", "fieldtype": "Check", "label": "Active", "default": "1"}
+ ],
+ "links": [],
+ "modified": "2026-06-12 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Transport Assignment",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "share": 1},
+  {"role": "Academics User", "read": 1, "write": 1, "create": 1, "email": 1, "print": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
