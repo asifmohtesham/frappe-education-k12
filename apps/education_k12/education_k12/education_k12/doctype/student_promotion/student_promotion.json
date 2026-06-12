@@ -1,0 +1,31 @@
+{
+ "actions": [],
+ "autoname": "format:K12-PROM-{YYYY}-{#####}",
+ "creation": "2026-06-12 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["from_academic_year", "from_program", "to_academic_year", "to_program", "fetch_students", "students", "amended_from"],
+ "fields": [
+  {"fieldname": "from_academic_year", "fieldtype": "Link", "options": "Academic Year", "label": "From Academic Year", "reqd": 1},
+  {"fieldname": "from_program", "fieldtype": "Link", "options": "Program", "label": "From Grade/Program", "reqd": 1},
+  {"fieldname": "to_academic_year", "fieldtype": "Link", "options": "Academic Year", "label": "To Academic Year", "reqd": 1},
+  {"fieldname": "to_program", "fieldtype": "Link", "options": "Program", "label": "To Grade/Program"},
+  {"fieldname": "fetch_students", "fieldtype": "Button", "label": "Get Students"},
+  {"fieldname": "students", "fieldtype": "Table", "options": "Student Promotion Student", "label": "Students"},
+  {"fieldname": "amended_from", "fieldtype": "Link", "options": "Student Promotion", "label": "Amended From", "no_copy": 1, "print_hide": 1, "read_only": 1}
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-06-12 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "Student Promotion",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "submit": 1, "cancel": 1, "amend": 1, "email": 1, "print": 1, "share": 1},
+  {"role": "Academics User", "read": 1, "write": 1, "create": 1, "submit": 1, "email": 1, "print": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

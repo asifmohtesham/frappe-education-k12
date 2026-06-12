@@ -1,0 +1,24 @@
+{
+ "actions": [],
+ "creation": "2026-06-12 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["student", "student_name", "current_enrollment", "action"],
+ "fields": [
+  {"fieldname": "student", "fieldtype": "Link", "options": "Student", "label": "Student", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "student_name", "fieldtype": "Data", "label": "Student Name", "fetch_from": "student.student_name", "in_list_view": 1},
+  {"fieldname": "current_enrollment", "fieldtype": "Link", "options": "Program Enrollment", "label": "Current Enrollment", "read_only": 1},
+  {"fieldname": "action", "fieldtype": "Select", "options": "Promote\nRetain\nExit", "default": "Promote", "label": "Action", "reqd": 1, "in_list_view": 1}
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-12 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "Student Promotion Student",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
