@@ -1,0 +1,29 @@
+{
+ "actions": [],
+ "autoname": "field:vehicle_number",
+ "creation": "2026-06-12 16:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["vehicle_number", "capacity", "make_model", "driver", "attendant", "disabled"],
+ "fields": [
+  {"fieldname": "vehicle_number", "fieldtype": "Data", "label": "Vehicle / Plate Number", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "capacity", "fieldtype": "Int", "label": "Seat Capacity", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "make_model", "fieldtype": "Data", "label": "Make / Model"},
+  {"fieldname": "driver", "fieldtype": "Link", "options": "K12 Transport Staff", "label": "Driver", "in_list_view": 1},
+  {"fieldname": "attendant", "fieldtype": "Link", "options": "K12 Transport Staff", "label": "Attendant"},
+  {"fieldname": "disabled", "fieldtype": "Check", "label": "Disabled"}
+ ],
+ "links": [],
+ "modified": "2026-06-12 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Vehicle",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "share": 1},
+  {"role": "Academics User", "read": 1, "write": 1, "create": 1, "email": 1, "print": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
