@@ -19,6 +19,13 @@ def ensure_academic_year(name="2026-27", start="2026-09-01", end="2027-06-30"):
 
 
 def ensure_student(first_name, **extra):
+    """Get or create a Student by first_name.
+
+    The first-name-keyed lookup is safe only because FrappeTestCase rolls back
+    the database after each test class.  Later tasks should use task-specific
+    student names (e.g. "GradesStudent", "SiblingA") to avoid cross-test
+    collisions if the rollback boundary ever changes.
+    """
     existing = frappe.db.get_value("Student", {"first_name": first_name})
     if existing:
         return existing
