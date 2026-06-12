@@ -8,6 +8,7 @@ teachers and parents.
 - **Design spec:** `docs/superpowers/specs/2026-06-12-k12-education-saas-design.md`
 - **Phase 0 plan:** `docs/superpowers/plans/2026-06-12-phase-0-foundation.md`
 - **Phase 1 plan:** `docs/superpowers/plans/2026-06-12-phase-1-core-sis.md`
+- **Phase 2 plan:** `docs/superpowers/plans/2026-06-12-phase-2-transport.md`
 
 ## Phase 1 (Core SIS)
 
@@ -44,6 +45,35 @@ action (Promote / Retain / Exit), then Submit to create next-year enrollments.
 **Portal pages** — the Vue 3 SPA at `/portal`:
 - Teachers see their homerooms and student roster (requires `Instructor.user`).
 - Parents see their linked children and each child's profile (requires `Guardian.user`).
+
+## Phase 2 (Transport)
+
+**Plan doc:** `docs/superpowers/plans/2026-06-12-phase-2-transport.md`
+
+**Doctypes** — five net-new doctypes in the `Education K12` module:
+`K12 Transport Staff` (drivers and attendants), `K12 Vehicle` (plate number,
+seat capacity, linked driver/attendant), `K12 Transport Route` (ordered list of
+`K12 Route Stop` child rows, linked vehicle, `standard_fee` currency field),
+and `K12 Transport Assignment` (student ↔ route + stop for an academic year).
+
+**Validation rules** — vehicle capacity is enforced per (route, academic year)
+across all active assignments; only one active assignment is allowed per
+(student, academic year); a stop referenced on an assignment must exist in the
+route's stop list; a route must have at least one stop with no duplicates.
+
+**Route Manifest** — a Script Report available under Desk → Reports → Route
+Manifest. Filter by route and academic year; rows are grouped by stop in sequence
+order and list each active student's name and travel direction. The underlying
+function `education_k12.k12_transport.manifest.get_route_manifest` is also
+callable directly from Python.
+
+**Phase 3 fee hook** — `K12 Transport Route.standard_fee` (Currency) is the
+anchor field that Phase 3 fee structures will consume when generating transport
+fee items.
+
+**Parent portal** — each child's profile page (`/portal`) now shows the
+assigned bus route, stop name, and pickup time (via `get_child_profile` →
+`transport` dict). Children with no active transport assignment show nothing.
 
 ## Layout
 
@@ -160,7 +190,7 @@ npm test             # Vitest unit tests
 
 | Layer | Command | Where | Expected |
 |---|---|---|---|
-| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 25 tests OK |
+| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 40 tests OK |
 | Ops | `python3.11 -m pytest ops/tests -v` | WSL, repo root | 7 passed |
 | Frontend | `npm test` | Windows, `apps/education_k12/frontend` | 6 passed |
 
