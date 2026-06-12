@@ -205,4 +205,7 @@ def ensure_fee_categories():
                     }
                 ).insert(ignore_permissions=True)
             except Exception:
-                pass  # ERPNext not fully bootstrapped; skip silently
+                frappe.log_error(
+                    title=f"ensure_fee_categories: could not seed '{category_name}'",
+                    message=frappe.get_traceback(),
+                )
