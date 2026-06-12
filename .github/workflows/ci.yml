@@ -64,7 +64,9 @@ jobs:
           # (bench get-app does not accept local filesystem paths)
           cp -r $GITHUB_WORKSPACE/apps/education_k12 apps/education_k12
           /home/runner/frappe-bench/env/bin/pip install --quiet -e apps/education_k12
-          echo "education_k12" >> sites/apps.txt
+          # Ensure apps.txt has education_k12 on its own line (bench get-app
+          # normally does this; the printf guards against a missing trailing newline)
+          printf '\neducation_k12\n' >> sites/apps.txt
 
       - name: Create test site and install apps
         working-directory: /home/runner/frappe-bench
