@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "creation": "2026-06-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["school_display_name", "default_language"],
+ "fields": [
+  {
+   "fieldname": "school_display_name",
+   "fieldtype": "Data",
+   "label": "School Display Name"
+  },
+  {
+   "default": "en",
+   "fieldname": "default_language",
+   "fieldtype": "Select",
+   "label": "Default Language",
+   "options": "en\nar"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "K12 Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
