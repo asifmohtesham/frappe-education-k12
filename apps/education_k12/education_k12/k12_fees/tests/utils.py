@@ -54,12 +54,20 @@ def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
                     return fallback
                 raise
 
-    # Ensure default_income_account and default_cash_account are set so that
-    # Fees.set_missing_accounts_and_fields fills income_account correctly
-    # (income_account on Fees is a fetch_from field that resolves to None when
-    # Fee Structure doesn't carry the field; the company default is the fallback).
+    # Ensure key company defaults are set so that Fees GL entries succeed.
+    # Several Fees fields (income_account, cost_center) are fetch_from fields
+    # that chain through Fee Structure → Company defaults.  On fresh CI sites
+    # the Company is created without these defaults, leaving the GL entries
+    # without required fields (income account needs cost center; JE needs cash
+    # account).  We fill them once using the auto-generated Chart of Accounts.
+    current = frappe.db.get_value(
+        "Company",
+        name,
+        ["default_income_account", "default_cash_account", "cost_center"],
+        as_dict=True,
+    ) or {}
     needs_update = {}
-    if not frappe.db.get_value("Company", name, "default_income_account"):
+    if not current.get("default_income_account"):
         ia = frappe.db.get_value(
             "Account",
             {"company": name, "root_type": "Income", "is_group": 0},
@@ -67,7 +75,7 @@ def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
         )
         if ia:
             needs_update["default_income_account"] = ia
-    if not frappe.db.get_value("Company", name, "default_cash_account"):
+    if not current.get("default_cash_account"):
         ca = frappe.db.get_value(
             "Account",
             {"company": name, "account_type": "Cash", "is_group": 0},
@@ -75,6 +83,12 @@ def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
         )
         if ca:
             needs_update["default_cash_account"] = ca
+    if not current.get("cost_center"):
+        cc = frappe.db.get_value(
+            "Cost Center", {"company": name, "is_group": 0}, "name"
+        )
+        if cc:
+            needs_update["cost_center"] = cc
     if needs_update:
         frappe.db.set_value("Company", name, needs_update)
 
@@ -110,7 +124,13 @@ def ensure_fee_structure(program, academic_year, company, amount=10000):
         "Fee Structure",
         {"program": program, "academic_year": academic_year},
     )
+    cc = cost_center(company)
     if existing:
+        # Patch cost_center if it was created before ensure_company set it.
+        if cc and not frappe.db.get_value("Fee Structure", existing, "cost_center"):
+            frappe.db.set_value(
+                "Fee Structure", existing, "cost_center", cc, update_modified=False
+            )
         return existing
     structure = frappe.get_doc(
         {
@@ -119,7 +139,7 @@ def ensure_fee_structure(program, academic_year, company, amount=10000):
             "academic_year": academic_year,
             "company": company,
             "receivable_account": receivable_account(company),
-            "cost_center": cost_center(company),
+            "cost_center": cc,
             "components": [
                 {"fees_category": "Tuition", "amount": amount, "total": amount}
             ],
@@ -152,6 +172,47 @@ def enroll_student(student, program, academic_year):
     enrollment.insert(ignore_permissions=True)
     enrollment.submit()
     return enrollment.name
+
+
+def ensure_fees_submission_prereqs(fees_name, company):
+    """Ensure fee_structure and company have non-NULL cost_center and
+    income_account before submitting a Fees doc.
+
+    On CI sites the Fee Structure may have been created before the company's
+    cost_center / default_income_account were set (e.g. by an earlier test
+    class).  Patching the Fee Structure here ensures the fetch_from mechanism
+    picks up correct values on the next save (which fees.submit() triggers).
+    """
+    cc = cost_center(company)
+    ia = income_account(company)
+
+    # Patch the Fee Structure so fetch_from chains propagate correctly.
+    fee_structure = frappe.db.get_value("Fees", fees_name, "fee_structure")
+    if fee_structure:
+        fs_row = frappe.db.get_value(
+            "Fee Structure", fee_structure, ["cost_center"], as_dict=True
+        )
+        if fs_row and cc and not fs_row.get("cost_center"):
+            frappe.db.set_value(
+                "Fee Structure",
+                fee_structure,
+                "cost_center",
+                cc,
+                update_modified=False,
+            )
+
+    # Also patch the Fees doc directly as a safety net (fetch_from may cache
+    # the NULL value in the document row from the initial insert).
+    fees_row = frappe.db.get_value(
+        "Fees", fees_name, ["cost_center", "income_account"], as_dict=True
+    )
+    updates = {}
+    if cc and not fees_row.get("cost_center"):
+        updates["cost_center"] = cc
+    if ia and not fees_row.get("income_account"):
+        updates["income_account"] = ia
+    if updates:
+        frappe.db.set_value("Fees", fees_name, updates, update_modified=False)
 
 
 def make_fees(student, program="Grade 5", academic_year=None, tuition=10000):
