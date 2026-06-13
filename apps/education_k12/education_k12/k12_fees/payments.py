@@ -1,4 +1,10 @@
-"""Record incoming fee payments against the ERPNext GL."""
+"""Record incoming fee payments against the ERPNext GL.
+
+Note for callers outside a request context (e.g. background jobs): this
+function does not commit.  The caller must call ``frappe.db.commit()``
+explicitly after a successful return so the row lock is released and the
+Journal Entry becomes visible to other workers.
+"""
 
 import frappe
 from frappe import _
@@ -12,10 +18,20 @@ def record_fee_payment(fees_name, amount, reference=None, mode="Online"):
     amount = flt(amount)
     if amount <= 0:
         frappe.throw(_("Payment amount must be positive"))
-    if amount > flt(fees.outstanding_amount):
+
+    # Lock the row so concurrent gateway callbacks serialize on the
+    # outstanding-amount check.  ``for_update=True`` issues SELECT … FOR UPDATE
+    # which blocks until any sibling transaction holding the lock commits or
+    # rolls back, preventing the classic read-check-write race that would allow
+    # two callbacks to both pass the overpayment guard.
+    locked_outstanding = flt(
+        frappe.db.get_value("Fees", fees_name, "outstanding_amount", for_update=True)
+    )
+
+    if amount > locked_outstanding:
         frappe.throw(
             _("Payment {0} exceeds outstanding {1}").format(
-                amount, fees.outstanding_amount
+                amount, locked_outstanding
             )
         )
 
@@ -26,8 +42,8 @@ def record_fee_payment(fees_name, amount, reference=None, mode="Online"):
             "company": fees.company,
             "posting_date": today(),
             "user_remark": _("Fee payment {0} ({1})").format(
-                reference or "", mode
-            ).strip(),
+                reference or "-", mode
+            ),
             "accounts": [
                 {
                     "account": _default_cash_account(fees.company),

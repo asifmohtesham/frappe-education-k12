@@ -28,6 +28,11 @@ class MockGateway(BaseGateway):
 
 
 def consume_token(token):
+    # frappe.cache().set_value pickles values, so we cannot use the raw Redis
+    # GETDEL command here (it would return pickle bytes, not JSON).  Switching
+    # to raw-conn writes would add complexity for a dev-only gateway.  The
+    # non-atomic get+delete below has a narrow TOCTOU window, which is
+    # acceptable: this gateway is never used in production.
     key = _cache_key(token)
     raw = frappe.cache().get_value(key)
     if not raw:
