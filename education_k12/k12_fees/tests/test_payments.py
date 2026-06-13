@@ -21,17 +21,15 @@ class TestRecordFeePayment(FrappeTestCase):
     def _submitted_fees(self, student_name):
         fees = make_fees(ensure_student(student_name))
         fees.insert(ignore_permissions=True)
-        # Patch fetch_from fields that may be NULL on CI sites (cost_center,
-        # income_account chain through fee_structure → company defaults).
-        # We set both in DB (for reload) AND in-memory (for submit's on_submit
-        # which reads self.cost_center/income_account directly).
+        # Patch fee_structure.cost_center and the Fees doc in DB so that when
+        # Fees.validate() calls set_missing_accounts_and_fields(), the Company
+        # default cost_center and income_account are available.  Then reload
+        # from DB so the in-memory document reflects the patched values.
+        # We cannot simply set in-memory attributes because fetch_from fires
+        # during fees.insert() (is_new=True) and may have overwritten our
+        # initial values with NULL fetched from fee_structure.
         ensure_fees_submission_prereqs(fees.name, fees.company)
-        from education_k12.k12_fees.tests.utils import cost_center, income_account
-        company = fees.company
-        if not fees.cost_center:
-            fees.cost_center = cost_center(company)
-        if not fees.income_account:
-            fees.income_account = income_account(company)
+        fees = frappe.get_doc("Fees", fees.name)  # reload from DB with patched values
         fees.submit()
         return fees
 

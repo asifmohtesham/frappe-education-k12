@@ -180,18 +180,31 @@ def enroll_student(student, program, academic_year):
 
 
 def ensure_fees_submission_prereqs(fees_name, company):
-    """Ensure fee_structure and company have non-NULL cost_center and
-    income_account before submitting a Fees doc.
+    """Ensure fee_structure and the Fees doc have non-NULL cost_center and
+    income_account before submitting.
 
-    On CI sites the Fee Structure may have been created before the company's
-    cost_center / default_income_account were set (e.g. by an earlier test
-    class).  Patching the Fee Structure here ensures the fetch_from mechanism
-    picks up correct values on the next save (which fees.submit() triggers).
+    Strategy: resolve the canonical values from the Company record first
+    (ERPNext's create_default_cost_center sets Company.cost_center
+    synchronously on insert, so this is more reliable than querying the
+    Cost Center table which might miss records due to transaction isolation).
+    Fall back to querying the table if the Company field is also NULL.
+
+    The Fees doc is then patched directly in DB so that a subsequent
+    frappe.get_doc() reload picks up the correct values, bypassing
+    fetch_from (which only fires on is_new docs and could overwrite values
+    fetched from a still-NULL fee_structure).
     """
-    cc = cost_center(company)
-    ia = income_account(company)
+    # Authoritative cost center: Company.cost_center field (set by ERPNext
+    # create_default_cost_center → db_set, committed synchronously).
+    cc = frappe.db.get_value("Company", company, "cost_center") or cost_center(company)
+    # Income account: Company.default_income_account field.
+    ia = (
+        frappe.db.get_value("Company", company, "default_income_account")
+        or income_account(company)
+    )
 
-    # Patch the Fee Structure so fetch_from chains propagate correctly.
+    # Patch the Fee Structure so future fetch_from chains (on draft docs)
+    # propagate correct values.
     fee_structure = frappe.db.get_value("Fees", fees_name, "fee_structure")
     if fee_structure:
         fs_row = frappe.db.get_value(
@@ -206,8 +219,8 @@ def ensure_fees_submission_prereqs(fees_name, company):
                 update_modified=False,
             )
 
-    # Also patch the Fees doc directly as a safety net (fetch_from may cache
-    # the NULL value in the document row from the initial insert).
+    # Patch the Fees doc directly so that reloading it from DB gives the
+    # correct values without re-triggering fetch_from.
     fees_row = frappe.db.get_value(
         "Fees", fees_name, ["cost_center", "income_account"], as_dict=True
     )
