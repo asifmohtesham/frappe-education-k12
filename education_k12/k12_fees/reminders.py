@@ -10,7 +10,8 @@ def get_due_reminders():
     if not settings.enable_fee_reminders:
         return []
     overdue_cutoff = add_days(today(), -(settings.reminder_days_after_due or 0))
-    repeat_cutoff = add_days(today(), -(settings.reminder_repeat_days or 7))
+    repeat_days = settings.reminder_repeat_days if settings.reminder_repeat_days is not None else 7
+    repeat_cutoff = add_days(today(), -repeat_days)
     return frappe.get_all(
         "Fees",
         filters={
