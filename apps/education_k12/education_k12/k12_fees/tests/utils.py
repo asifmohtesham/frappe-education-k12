@@ -4,28 +4,52 @@ from education_k12.k12_sis.tests.utils import ensure_academic_year, ensure_stude
 
 
 def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
-    if frappe.db.exists("Company", name):
-        return name
-    try:
-        frappe.get_doc(
-            {
-                "doctype": "Company",
-                "company_name": name,
-                "abbr": abbr,
-                "default_currency": currency,
-                "country": "United Arab Emirates",
-            }
-        ).insert(ignore_permissions=True)
-    except Exception:
-        # On fresh CI sites ERPNext's on_update hook for Company creates default
-        # warehouses and requires master data (e.g. "Transit" Warehouse Type)
-        # that may not exist yet.  Fall back to the first available company so
-        # tests can still run; if none exists, re-raise.
-        if not frappe.db.exists("Company", name):
-            fallback = frappe.db.get_value("Company", {}, "name")
-            if fallback:
-                return fallback
-            raise
+    if not frappe.db.exists("Company", name):
+        try:
+            frappe.get_doc(
+                {
+                    "doctype": "Company",
+                    "company_name": name,
+                    "abbr": abbr,
+                    "default_currency": currency,
+                    "country": "United Arab Emirates",
+                }
+            ).insert(ignore_permissions=True)
+        except Exception:
+            # On fresh CI sites ERPNext's on_update hook for Company creates default
+            # warehouses and requires master data (e.g. "Transit" Warehouse Type)
+            # that may not exist yet.  Fall back to the first available company so
+            # tests can still run; if none exists, re-raise.
+            if not frappe.db.exists("Company", name):
+                fallback = frappe.db.get_value("Company", {}, "name")
+                if fallback:
+                    return fallback
+                raise
+
+    # Ensure default_income_account and default_cash_account are set so that
+    # Fees.set_missing_accounts_and_fields fills income_account correctly
+    # (income_account on Fees is a fetch_from field that resolves to None when
+    # Fee Structure doesn't carry the field; the company default is the fallback).
+    needs_update = {}
+    if not frappe.db.get_value("Company", name, "default_income_account"):
+        ia = frappe.db.get_value(
+            "Account",
+            {"company": name, "root_type": "Income", "is_group": 0},
+            "name",
+        )
+        if ia:
+            needs_update["default_income_account"] = ia
+    if not frappe.db.get_value("Company", name, "default_cash_account"):
+        ca = frappe.db.get_value(
+            "Account",
+            {"company": name, "account_type": "Cash", "is_group": 0},
+            "name",
+        )
+        if ca:
+            needs_update["default_cash_account"] = ca
+    if needs_update:
+        frappe.db.set_value("Company", name, needs_update)
+
     return name
 
 
