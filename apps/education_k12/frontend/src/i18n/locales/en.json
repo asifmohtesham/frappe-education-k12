@@ -31,6 +31,15 @@
     "emergencyPhone": "Emergency Phone",
     "busRoute": "Bus Route",
     "busStop": "Bus Stop",
-    "busPickup": "Pickup Time"
+    "busPickup": "Pickup Time",
+    "fees": "Fees",
+    "viewFees": "View fees & payments",
+    "backToProfile": "Back to profile",
+    "noFees": "No fee records yet.",
+    "dueDate": "Due date",
+    "outstanding": "Outstanding",
+    "paid": "Paid",
+    "payNow": "Pay now",
+    "downloadReceipt": "Download receipt"
   }
 }

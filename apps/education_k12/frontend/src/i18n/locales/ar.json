@@ -31,6 +31,15 @@
     "emergencyPhone": "هاتف الطوارئ",
     "busRoute": "خط الحافلة",
     "busStop": "موقف الحافلة",
-    "busPickup": "وقت الصعود"
+    "busPickup": "وقت الصعود",
+    "fees": "الرسوم",
+    "viewFees": "عرض الرسوم والمدفوعات",
+    "backToProfile": "العودة إلى الملف",
+    "noFees": "لا توجد سجلات رسوم بعد.",
+    "dueDate": "تاريخ الاستحقاق",
+    "outstanding": "المتبقي",
+    "paid": "مدفوع",
+    "payNow": "ادفع الآن",
+    "downloadReceipt": "تحميل الإيصال"
   }
 }
