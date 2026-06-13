@@ -54,11 +54,13 @@ def send_overdue_fee_reminders():
                     fees.currency or "",
                     fees.due_date,
                 ),
-                now=True,
             )
         except Exception:
-            # No outgoing email account configured (dev/test sites) — still mark sent
-            pass
+            frappe.log_error(
+                title=f"Fee reminder email failed for {fees.name}",
+                message=frappe.get_traceback(),
+            )
+            continue
         frappe.db.set_value(
             "Fees", fees.name, "last_reminder_on", today(), update_modified=False
         )
