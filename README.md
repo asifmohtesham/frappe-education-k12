@@ -75,6 +75,37 @@ fee items.
 assigned bus route, stop name, and pickup time (via `get_child_profile` →
 `transport` dict). Children with no active transport assignment show nothing.
 
+## Phase 3 — Fees & Billing
+
+### Fee enrichment
+All per-student fee adjustments happen in a single `before_validate` hook on the `Fees` doctype (`k12_fees/enrichment.py`). Three types of adjustments are applied automatically:
+- **Sibling discount**: configurable slabs in K12 Settings (by sibling rank); baked into component amounts
+- **Transport fee**: pulled from the student's active K12 Transport Assignment → Route `standard_fee`
+- **VAT**: computed over components whose Fee Category has `taxable=1`; added as a reserved "VAT" component row
+
+UAE tuition is seeded as non-taxable by default; schools can adjust per their tax advice by editing the Fee Category's `taxable` flag.
+
+### Payment gateways
+Configure via **K12 Settings → Payment Gateway**:
+- **Mock** (default): single-use token flow, fully end-to-end tested — use for dev and demos
+- **Stripe**: raw HTTPS to Checkout Sessions API; keys in `site_config.json` (`stripe_secret_key`, `stripe_webhook_secret`); webhook endpoint: `/api/method/education_k12.api.fees.stripe_webhook`
+
+⚠️ Stripe is stub-tested only (no live merchant credentials available during development). Set up Stripe test-mode keys and run a manual checkout before enabling for a real school.
+
+### Overdue fee reminders
+Enable via **K12 Settings → Fee Reminders**. When enabled, a daily scheduler job emails parents of students with outstanding fees past the due date. Throttled by `Remind After (days past due)` and `Repeat Every (days)` settings.
+
+### Fee receipt
+A branded "K12 Fee Receipt" print format is included (`print_format/k12_fee_receipt/`). Download via the parent portal or from the Fees list in the desk.
+
+### Parent portal fees page
+Parents access `/portal` → child profile → "View fees & payments" to see all submitted fee bills, initiate online payment, and download receipts.
+
+### Test counts (Phase 3 end state)
+- Backend: 66 tests
+- Ops: 8 tests
+- Frontend: 6 tests
+
 ## Layout
 
 | Path | Purpose |

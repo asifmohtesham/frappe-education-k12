@@ -62,6 +62,22 @@ def test_seeds_default_grades_after_app_install():
     assert seed_index > last_install_index
 
 
+def test_seeds_fee_categories_after_grade_seed():
+    cmds = build_commands(make_config())
+    flat = [" ".join(c) for c in cmds]
+    fee_cat_index = next(
+        i
+        for i, c in enumerate(flat)
+        if "education_k12.setup.install.ensure_fee_categories" in c
+    )
+    grade_seed_index = next(
+        i
+        for i, c in enumerate(flat)
+        if "education_k12.k12_sis.grades.create_default_grade_programs" in c
+    )
+    assert fee_cat_index > grade_seed_index
+
+
 def test_provision_runs_all_commands_in_order_with_env():
     calls = []
 
