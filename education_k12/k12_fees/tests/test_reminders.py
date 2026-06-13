@@ -1,6 +1,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, today
+from unittest.mock import patch
 
 from education_k12.k12_fees.reminders import get_due_reminders, send_overdue_fee_reminders
 from education_k12.k12_fees.tests.utils import make_fees
@@ -43,13 +44,15 @@ class TestFeeReminders(FrappeTestCase):
     def test_send_marks_last_reminder_and_respects_repeat(self):
         self._settings()
         fees = self._overdue_fees("Remind Kid Three")
-        sent = send_overdue_fee_reminders()
+        with patch("education_k12.k12_fees.reminders.frappe.sendmail"):
+            sent = send_overdue_fee_reminders()
         self.assertIn(fees.name, sent)
         self.assertEqual(
             frappe.db.get_value("Fees", fees.name, "last_reminder_on"),
             frappe.utils.getdate(today()),
         )
-        self.assertEqual(send_overdue_fee_reminders(), [])  # throttled by repeat window
+        with patch("education_k12.k12_fees.reminders.frappe.sendmail"):
+            self.assertEqual(send_overdue_fee_reminders(), [])  # throttled by repeat window
 
     def test_fee_receipt_print_format_renders(self):
         fees = self._overdue_fees("Remind Kid Print")
