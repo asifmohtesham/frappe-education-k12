@@ -1,6 +1,34 @@
 import frappe
+from frappe.utils import add_days, get_date_str, getdate
 
 from education_k12.k12_sis.tests.utils import ensure_academic_year, ensure_student
+
+
+def ensure_fiscal_year():
+    """Ensure a Fiscal Year covering today() exists on the test site.
+
+    ERPNext's Journal Entry (and Fees GL) requires a Fiscal Year that covers
+    the posting_date.  Fresh CI sites don't auto-create years, so we seed one
+    spanning today's calendar year.
+    """
+    today = getdate(frappe.utils.today())
+    year_str = str(today.year)
+    if frappe.db.exists("Fiscal Year", year_str):
+        return year_str
+    year_start = getdate(f"{today.year}-01-01")
+    year_end = getdate(f"{today.year}-12-31")
+    try:
+        frappe.get_doc(
+            {
+                "doctype": "Fiscal Year",
+                "year": year_str,
+                "year_start_date": get_date_str(year_start),
+                "year_end_date": get_date_str(year_end),
+            }
+        ).insert(ignore_permissions=True)
+    except frappe.DuplicateEntryError:
+        pass
+    return year_str
 
 
 def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
