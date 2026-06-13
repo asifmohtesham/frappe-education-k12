@@ -4,10 +4,11 @@
       class="text-sm text-blue-600"
       :to="{ name: 'ChildProfile', params: { studentId: route.params.studentId } }"
     >
-      ← {{ $t('parent.backToProfile') }}
+      {{ backArrow }} {{ $t('parent.backToProfile') }}
     </router-link>
     <h1 class="mb-4 mt-2 text-2xl font-semibold">{{ $t('parent.fees') }}</h1>
     <div v-if="fees.loading" class="text-gray-500">{{ $t('common.loading') }}</div>
+    <p v-else-if="fees.error" class="text-red-600">{{ fees.error }}</p>
     <p v-else-if="!fees.data?.length" class="text-gray-600">
       {{ $t('parent.noFees') }}
     </p>
@@ -67,18 +68,22 @@
             {{ $t('parent.downloadReceipt') }}
           </a>
         </div>
+        <ErrorMessage v-if="payingBill !== bill.name" :message="initiatePayment.error" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Button } from 'frappe-ui'
+import { useI18n } from 'vue-i18n'
+import { Button, ErrorMessage } from 'frappe-ui'
 import { childFees, initiatePayment } from '../../data/portal'
 
 const route = useRoute()
+const { locale } = useI18n()
+const backArrow = computed(() => locale.value === 'ar' ? '→' : '←')
 const fees = childFees(route.params.studentId)
 const payingBill = ref(null)
 
