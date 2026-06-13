@@ -30,3 +30,15 @@ export function childProfile(studentId) {
     auto: true,
   })
 }
+
+export function childFees(studentId) {
+  return createResource({
+    url: 'education_k12.api.fees.get_child_fees',
+    params: { student: studentId },
+    auto: true,
+  })
+}
+
+export const initiatePayment = createResource({
+  url: 'education_k12.api.fees.initiate_fee_payment',
+})

@@ -24,6 +24,11 @@ const routes = [
     name: 'ChildProfile',
     component: () => import('./pages/parent/ChildProfile.vue'),
   },
+  {
+    path: '/children/:studentId/fees',
+    name: 'ChildFees',
+    component: () => import('./pages/parent/ChildFees.vue'),
+  },
 ]
 
 const router = createRouter({

@@ -12,6 +12,12 @@
           <dd class="text-sm">{{ field.value() || '—' }}</dd>
         </template>
       </dl>
+      <router-link
+        class="mt-2 inline-block text-sm text-blue-600 underline"
+        :to="{ name: 'ChildFees', params: { studentId: route.params.studentId } }"
+      >
+        {{ $t('parent.viewFees') }}
+      </router-link>
     </template>
   </div>
 </template>
