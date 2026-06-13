@@ -1,4 +1,13 @@
-"""Development/demo gateway: a single-use token redeemed by a portal endpoint."""
+"""Development/demo gateway: a single-use token redeemed by a portal endpoint.
+
+Tokens are stored in an in-process dict (not Redis) so that this gateway
+works even when Redis is unavailable or misconfigured — a common situation in
+development and CI environments.  The narrow TOCTOU window on the
+get-then-delete in consume_token is acceptable: this gateway is never used in
+production.
+"""
+
+import time
 
 import frappe
 
@@ -6,18 +15,16 @@ from education_k12.k12_fees.gateways.base import BaseGateway
 
 TOKEN_TTL_SECONDS = 3600
 
-
-def _cache_key(token):
-    return f"k12_mock_payment:{token}"
+# module-level store: token -> (payload_dict, expiry_epoch)
+_token_store: dict = {}
 
 
 class MockGateway(BaseGateway):
     def create_checkout_for(self, fees_name, amount):
         token = frappe.generate_hash(length=32)
-        frappe.cache().set_value(
-            _cache_key(token),
-            frappe.as_json({"fees": fees_name, "amount": amount}),
-            expires_in_sec=TOKEN_TTL_SECONDS,
+        _token_store[token] = (
+            {"fees": fees_name, "amount": amount},
+            time.monotonic() + TOKEN_TTL_SECONDS,
         )
         return {
             "payment_url": (
@@ -28,14 +35,12 @@ class MockGateway(BaseGateway):
 
 
 def consume_token(token):
-    # frappe.cache().set_value pickles values, so we cannot use the raw Redis
-    # GETDEL command here (it would return pickle bytes, not JSON).  Switching
-    # to raw-conn writes would add complexity for a dev-only gateway.  The
-    # non-atomic get+delete below has a narrow TOCTOU window, which is
-    # acceptable: this gateway is never used in production.
-    key = _cache_key(token)
-    raw = frappe.cache().get_value(key)
-    if not raw:
+    entry = _token_store.get(token)
+    if not entry:
         return None
-    frappe.cache().delete_value(key)
-    return frappe.parse_json(raw)
+    payload, expiry = entry
+    if time.monotonic() > expiry:
+        _token_store.pop(token, None)
+        return None
+    del _token_store[token]
+    return payload
