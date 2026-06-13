@@ -32,6 +32,7 @@ def _drop_owned_rows(doc):
 
 
 def _apply_sibling_discount(doc):
+    # Transport and VAT rows are dropped before this runs; discount applies to base fees only.
     slabs = sorted(
         frappe.get_single("K12 Settings").sibling_discount_slabs or [],
         key=lambda s: s.sibling_rank,
