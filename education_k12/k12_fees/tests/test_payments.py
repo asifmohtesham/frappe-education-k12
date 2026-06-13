@@ -30,14 +30,6 @@ class TestRecordFeePayment(FrappeTestCase):
         # initial values with NULL fetched from fee_structure.
         ensure_fees_submission_prereqs(fees.name, fees.company)
         fees = frappe.get_doc("Fees", fees.name)  # reload from DB with patched values
-        # Diagnostic (CI): log the cost_center after reload so we can confirm
-        # the patch is visible before submitting.
-        frappe.logger("test_payments").error(
-            f"[test_payments] _submitted_fees: fees={fees.name} "
-            f"cost_center={fees.cost_center!r} income_account={fees.income_account!r} "
-            f"company={fees.company!r} "
-            f"Company.cost_center={frappe.db.get_value('Company', fees.company, 'cost_center')!r}"
-        )
         fees.submit()
         return fees
 
