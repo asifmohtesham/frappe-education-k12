@@ -36,22 +36,34 @@ def _apply_sibling_discount(doc):
         frappe.get_single("K12 Settings").sibling_discount_slabs or [],
         key=lambda s: s.sibling_rank,
     )
-    if not slabs:
-        return
-    rank = _sibling_rank(doc.student)
+
+    # Determine discount for this student (0 if no slabs or rank doesn't qualify).
     discount = 0
-    for slab in slabs:
-        if rank >= slab.sibling_rank:
-            discount = slab.discount_percent
-    if not discount:
-        return
+    if slabs:
+        rank = _sibling_rank(doc.student)
+        for slab in slabs:
+            if rank >= slab.sibling_rank:
+                discount = slab.discount_percent
+
     for row in doc.components:
         if row.fees_category not in OWNED_CATEGORIES:
-            original_amount = flt(row.amount)
-            row.discount = discount
-            # Reduce amount to the discounted value so upstream calculate_total
-            # (which sums amount directly) produces the correct grand_total.
-            row.amount = flt(original_amount * (1 - discount / 100), 2)
+            # Recover the original (pre-discount) amount.  On first save
+            # original_amount is 0/None, so we fall back to row.amount.
+            # On every subsequent save original_amount is already persisted,
+            # so we use it — this is what prevents compounding.
+            base = flt(row.original_amount) or flt(row.amount)
+            row.original_amount = base
+            if discount:
+                row.discount = discount
+                # Reduce amount to the discounted value so upstream
+                # calculate_total (which sums amount directly) produces the
+                # correct grand_total.
+                row.amount = flt(base * (1 - discount / 100), 2)
+            else:
+                # No discount applies (no slabs, or rank doesn't qualify, or
+                # slabs were removed after a previous save).  Restore to base.
+                row.discount = 0
+                row.amount = base
 
 
 def _sibling_rank(student):

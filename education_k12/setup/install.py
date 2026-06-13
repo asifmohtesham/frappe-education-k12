@@ -174,6 +174,15 @@ CUSTOM_FIELDS = {
             insert_after="due_date",
         ),
     ],
+    "Fee Component": [
+        dict(
+            fieldname="original_amount",
+            fieldtype="Currency",
+            label="Original Amount (pre-discount)",
+            read_only=1,
+            insert_after="amount",
+        ),
+    ],
 }
 
 

@@ -131,3 +131,32 @@ class TestFeeEnrichment(FrappeTestCase):
         fees = make_fees(student)
         fees.insert(ignore_permissions=True)
         self.assertNotIn("Transport", component_map(fees))
+
+    def test_sibling_discount_stable_across_resaves(self):
+        set_slabs([(2, 10)])
+        elder = ensure_student("Stable Sib Elder", date_of_birth="2013-01-01")
+        younger = ensure_student("Stable Sib Younger", date_of_birth="2015-01-01")
+        doc = frappe.get_doc("Student", elder)
+        doc.append(
+            "siblings",
+            {
+                "student": younger,
+                "studying_in_same_institute": "YES",
+                "full_name": "Stable Sib Younger",
+            },
+        )
+        doc.save(ignore_permissions=True)
+
+        fees = make_fees(younger)
+        fees.insert(ignore_permissions=True)
+        self.assertEqual(fees.grand_total, 9000)
+
+        for _ in range(3):
+            fees = frappe.get_doc("Fees", fees.name)
+            fees.save(ignore_permissions=True)
+
+        self.assertEqual(fees.grand_total, 9000)
+        tuition = next(c for c in fees.components if c.fees_category == "Tuition")
+        self.assertEqual(tuition.amount, 9000)
+        self.assertEqual(tuition.original_amount, 10000)
+        self.assertEqual(tuition.discount, 10)
