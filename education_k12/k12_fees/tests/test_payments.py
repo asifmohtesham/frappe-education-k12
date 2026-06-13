@@ -2,7 +2,11 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from education_k12.k12_fees.payments import record_fee_payment
-from education_k12.k12_fees.tests.utils import ensure_fiscal_year, make_fees
+from education_k12.k12_fees.tests.utils import (
+    ensure_fees_submission_prereqs,
+    ensure_fiscal_year,
+    make_fees,
+)
 from education_k12.k12_sis.grades import create_default_grade_programs
 from education_k12.k12_sis.tests.utils import ensure_student
 
@@ -17,6 +21,10 @@ class TestRecordFeePayment(FrappeTestCase):
     def _submitted_fees(self, student_name):
         fees = make_fees(ensure_student(student_name))
         fees.insert(ignore_permissions=True)
+        # Patch fetch_from fields that may be NULL on CI sites (cost_center,
+        # income_account chain through fee_structure → company defaults).
+        ensure_fees_submission_prereqs(fees.name, fees.company)
+        fees.reload()
         fees.submit()
         return fees
 
