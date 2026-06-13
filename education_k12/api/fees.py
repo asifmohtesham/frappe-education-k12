@@ -108,12 +108,15 @@ def stripe_webhook():
         reference=session.get("payment_intent"),
         mode="Stripe",
     )
+    frappe.db.commit()
     return "ok"
 
 
 @frappe.whitelist()
 def download_receipt(fees_name):
-    _own_fees(fees_name)
+    fees = _own_fees(fees_name)
+    if fees.docstatus != 1:
+        frappe.throw(_("Receipt not available"), frappe.PermissionError)
     html = frappe.get_print("Fees", fees_name, print_format=_receipt_format())
     frappe.local.response.filename = f"{fees_name}-receipt.pdf"
     frappe.local.response.filecontent = frappe.utils.pdf.get_pdf(html)
