@@ -2,7 +2,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from education_k12.k12_fees.payments import record_fee_payment
-from education_k12.k12_fees.tests.utils import make_fees
+from education_k12.k12_fees.tests.utils import ensure_fiscal_year, make_fees
 from education_k12.k12_sis.grades import create_default_grade_programs
 from education_k12.k12_sis.tests.utils import ensure_student
 
@@ -12,6 +12,7 @@ class TestRecordFeePayment(FrappeTestCase):
     def setUpClass(cls):
         super().setUpClass()
         create_default_grade_programs()
+        ensure_fiscal_year()  # JE posting_date=today() requires a covering fiscal year
 
     def _submitted_fees(self, student_name):
         fees = make_fees(ensure_student(student_name))
