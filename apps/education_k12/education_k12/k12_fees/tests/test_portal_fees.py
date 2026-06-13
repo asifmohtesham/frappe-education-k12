@@ -64,6 +64,7 @@ class TestPortalFees(FrappeTestCase):
 
     def test_mock_payment_completion_clears_outstanding(self):
         child, user, fees = self._setup_family("E")
+        frappe.db.set_single_value("K12 Settings", "payment_gateway", "Mock")
         frappe.set_user(user)
         url = fees_api.initiate_fee_payment(fees.name)["payment_url"]
         token = url.split("token=")[1]
