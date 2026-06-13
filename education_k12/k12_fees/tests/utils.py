@@ -195,8 +195,27 @@ def ensure_fees_submission_prereqs(fees_name, company):
     fetched from a still-NULL fee_structure).
     """
     # Authoritative cost center: Company.cost_center field (set by ERPNext
-    # create_default_cost_center → db_set, committed synchronously).
+    # create_default_cost_center → db_set, committed synchronously).  Fall back
+    # to a table query and, if still absent, create a minimal cost center so
+    # that GL entry validation can succeed on fresh CI sites.
     cc = frappe.db.get_value("Company", company, "cost_center") or cost_center(company)
+    if not cc:
+        # Last resort: trigger ERPNext's own cost-center setup for the company.
+        # This handles CI sites where Company.cost_center was not set because
+        # create_default_cost_center() never ran (e.g. warehouse creation failed
+        # before it could execute in on_update).
+        company_doc = frappe.get_doc("Company", company)
+        if not frappe.db.get_value("Cost Center", {"is_group": 0, "company": company}):
+            try:
+                company_doc.create_default_cost_center()
+            except Exception:
+                pass
+        cc = frappe.db.get_value("Company", company, "cost_center") or frappe.db.get_value(
+            "Cost Center", {"company": company, "is_group": 0}, "name"
+        )
+        if cc and not frappe.db.get_value("Company", company, "cost_center"):
+            frappe.db.set_value("Company", company, "cost_center", cc, update_modified=False)
+
     # Income account: Company.default_income_account field.
     ia = (
         frappe.db.get_value("Company", company, "default_income_account")
@@ -231,6 +250,10 @@ def ensure_fees_submission_prereqs(fees_name, company):
         updates["income_account"] = ia
     if updates:
         frappe.db.set_value("Fees", fees_name, updates, update_modified=False)
+
+    # Commit so the reload (frappe.get_doc) sees the patched values even when
+    # running inside a fresh transaction on a CI site.
+    frappe.db.commit()
 
 
 def make_fees(student, program="Grade 5", academic_year=None, tuition=10000):
