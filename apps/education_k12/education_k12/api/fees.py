@@ -102,12 +102,19 @@ def stripe_webhook():
     if event.get("type") != "checkout.session.completed":
         return "ignored"
     session = event["data"]["object"]
-    record_fee_payment(
-        session["metadata"]["fees"],
-        flt(session["amount_total"]) / 100,
-        reference=session.get("payment_intent"),
-        mode="Stripe",
-    )
+    # TODO: deduplicate by session["payment_intent"] — Stripe delivers webhooks at-least-once;
+    # a duplicate event for a partially-settled fee can still post a second JE.
+    # Check for an existing JE referencing this payment_intent before calling record_fee_payment.
+    try:
+        record_fee_payment(
+            session["metadata"]["fees"],
+            flt(session["amount_total"]) / 100,
+            reference=session.get("payment_intent"),
+            mode="Stripe",
+        )
+    except Exception:
+        frappe.db.rollback()
+        raise
     frappe.db.commit()
     return "ok"
 
