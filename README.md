@@ -9,6 +9,7 @@ teachers and parents.
 - **Phase 0 plan:** `docs/superpowers/plans/2026-06-12-phase-0-foundation.md`
 - **Phase 1 plan:** `docs/superpowers/plans/2026-06-12-phase-1-core-sis.md`
 - **Phase 2 plan:** `docs/superpowers/plans/2026-06-12-phase-2-transport.md`
+- **Phase 3 plan:** `docs/superpowers/plans/2026-06-13-phase-3-fees-billing.md`
 
 ## Phase 1 (Core SIS)
 
@@ -76,6 +77,8 @@ assigned bus route, stop name, and pickup time (via `get_child_profile` →
 `transport` dict). Children with no active transport assignment show nothing.
 
 ## Phase 3 — Fees & Billing
+
+**Plan doc:** `docs/superpowers/plans/2026-06-13-phase-3-fees-billing.md`
 
 ### Fee enrichment
 All per-student fee adjustments happen in a single `before_validate` hook on the `Fees` doctype (`k12_fees/enrichment.py`). Three types of adjustments are applied automatically:
@@ -221,8 +224,8 @@ npm test             # Vitest unit tests
 
 | Layer | Command | Where | Expected |
 |---|---|---|---|
-| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 40 tests OK |
-| Ops | `python3.11 -m pytest ops/tests -v` | WSL, repo root | 7 passed |
+| Backend | `bench --site dev.localhost run-tests --app education_k12` | WSL `~/frappe-bench-dev` | 66 tests OK |
+| Ops | `python3.11 -m pytest ops/tests -v` | WSL, repo root | 8 passed |
 | Frontend | `npm test` | Windows, `apps/education_k12/frontend` | 6 passed |
 
 Redis must be up before the backend test command.
