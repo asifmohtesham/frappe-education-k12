@@ -15,8 +15,21 @@ from education_k12.k12_fees.gateways.stripe import (
 
 class TestStripeGateway(FrappeTestCase):
     def setUp(self):
+        self._orig_sk = frappe.conf.get("stripe_secret_key")
+        self._orig_ws = frappe.conf.get("stripe_webhook_secret")
         frappe.conf.stripe_secret_key = "sk_test_dummy"
         frappe.conf.stripe_webhook_secret = "whsec_dummy"
+
+    def tearDown(self):
+        if self._orig_sk is None:
+            frappe.conf.pop("stripe_secret_key", None)
+        else:
+            frappe.conf.stripe_secret_key = self._orig_sk
+        if self._orig_ws is None:
+            frappe.conf.pop("stripe_webhook_secret", None)
+        else:
+            frappe.conf.stripe_webhook_secret = self._orig_ws
+        super().tearDown()
 
     def test_create_checkout_posts_session(self):
         fake_response = type(
