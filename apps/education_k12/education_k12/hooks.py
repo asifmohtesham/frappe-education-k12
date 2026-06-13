@@ -172,23 +172,11 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"education_k12.tasks.all"
-# 	],
-# 	"daily": [
-# 		"education_k12.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"education_k12.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"education_k12.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"education_k12.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+    "daily": [
+        "education_k12.k12_fees.reminders.send_overdue_fee_reminders",
+    ],
+}
 
 # Testing
 # -------
