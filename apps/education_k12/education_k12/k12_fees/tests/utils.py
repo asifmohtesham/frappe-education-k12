@@ -91,6 +91,11 @@ def ensure_company(name="Test K12 School", abbr="TKS", currency="AED"):
             needs_update["cost_center"] = cc
     if needs_update:
         frappe.db.set_value("Company", name, needs_update)
+        # Commit so subsequent cost_center lookups (including those made by
+        # Fee Structure inserts, which use fetch_from chains) see the updated
+        # Company defaults.  FrappeTestCase.setUpClass already commits once;
+        # this is a safe second commit within the class setup.
+        frappe.db.commit()
 
     return name
 
