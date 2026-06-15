@@ -4,7 +4,7 @@ authors = [
     { name = "Asif Mohtesham", email = "asifmohtesham@gmail.com"}
 ]
 description = "K-12 extensions for Frappe Education"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
@@ -25,7 +25,7 @@ packages = []
 
 [tool.ruff]
 line-length = 110
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [

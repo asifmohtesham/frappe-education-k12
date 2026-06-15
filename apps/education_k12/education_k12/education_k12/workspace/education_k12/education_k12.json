@@ -1,0 +1,227 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"k12-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"k12-sc1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"K12 Settings\",\"col\":3}},{\"id\":\"k12-sc2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"K12 Transport Route\",\"col\":3}},{\"id\":\"k12-sc3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"K12 Transport Assignment\",\"col\":3}},{\"id\":\"k12-sc4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student Promotion\",\"col\":3}},{\"id\":\"k12-sp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"k12-h2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transport</b></span>\",\"col\":12}},{\"id\":\"k12-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Transport\",\"col\":4}},{\"id\":\"k12-h3\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Students</b></span>\",\"col\":12}},{\"id\":\"k12-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Students & Admissions\",\"col\":4}},{\"id\":\"k12-h4\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Fees</b></span>\",\"col\":12}},{\"id\":\"k12-c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Fees\",\"col\":4}},{\"id\":\"k12-h5\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings</b></span>\",\"col\":12}},{\"id\":\"k12-c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
+ "creation": "2026-06-14 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "education",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Education K12",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transport",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Transport Route",
+   "link_count": 0,
+   "link_to": "K12 Transport Route",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Transport Assignment",
+   "link_count": 0,
+   "link_to": "K12 Transport Assignment",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Vehicle",
+   "link_count": 0,
+   "link_to": "K12 Vehicle",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Transport Staff",
+   "link_count": 0,
+   "link_to": "K12 Transport Staff",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Route Manifest",
+   "link_count": 0,
+   "link_to": "Route Manifest",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Students & Admissions",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Student Promotion",
+   "link_count": 0,
+   "link_to": "Student Promotion",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Admission Document Type",
+   "link_count": 0,
+   "link_to": "K12 Admission Document Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fees",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fees",
+   "link_count": 0,
+   "link_to": "Fees",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fee Schedule",
+   "link_count": 0,
+   "link_to": "Fee Schedule",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fee Structure",
+   "link_count": 0,
+   "link_to": "Fee Structure",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fee Category",
+   "link_count": 0,
+   "link_to": "Fee Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "K12 Settings",
+   "link_count": 0,
+   "link_to": "K12 Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-06-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education K12",
+ "name": "Education K12",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 12.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "format": "",
+   "label": "K12 Settings",
+   "link_to": "K12 Settings",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "format": "",
+   "label": "K12 Transport Route",
+   "link_to": "K12 Transport Route",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "format": "",
+   "label": "K12 Transport Assignment",
+   "link_to": "K12 Transport Assignment",
+   "stats_filter": "",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "format": "",
+   "label": "Student Promotion",
+   "link_to": "Student Promotion",
+   "stats_filter": "",
+   "type": "DocType"
+  }
+ ],
+ "title": "Education K12"
+}
