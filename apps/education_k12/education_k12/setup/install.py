@@ -199,6 +199,17 @@ def ensure_customizations():
     create_custom_fields(CUSTOM_FIELDS, ignore_validate=True)
     ensure_roles()
     ensure_fee_categories()
+    ensure_workspace()
+
+
+def ensure_workspace():
+    """Force-load the Education K12 workspace from the fixture file.
+
+    Frappe's auto-migrate picks up module fixtures, but on some installs the
+    workspace is silently skipped.  Calling reload_doc here guarantees the
+    tile appears after every bench migrate.
+    """
+    frappe.reload_doc("Education K12", "Workspace", "education_k12", force=True)
 
 
 def ensure_roles():
