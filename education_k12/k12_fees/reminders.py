@@ -32,6 +32,7 @@ def get_due_reminders():
             "due_date",
             "currency",
         ],
+        order_by="due_date asc",
     )
 
 
